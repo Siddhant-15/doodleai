@@ -9,17 +9,15 @@ import { getImageById } from '@/lib/actions/image.actions';
 import { getImageSize } from '@/lib/utils';
 import { DeleteConfirmation } from '@/components/shared/DeleteConfirmation';
 
-// Define the props to ensure type compatibility with PageProps
-type SearchParamProps = {
-  params: { id: string; type: string };
-};
+// Adjust types for compatibility with Next.js expectations
+type Params = Promise<{ id: string; type: string }>;
 
-// Add asynchronous page loading
-const ImageDetails = async ({ params }: SearchParamProps) => {
+const ImageDetails = async ({ params }: { params: Params }) => {
+  const resolvedParams = await params;
   const { userId } = await auth();
 
   // Fetch image data by ID
-  const image = await getImageById(params.id);
+  const image = await getImageById(resolvedParams.id);
 
   return (
     <>
@@ -28,7 +26,7 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
       <section className="mt-5 flex flex-wrap gap-4">
         <div className="p-14-medium md:p-16-medium flex gap-2">
           <p className="text-dark-600">Transformation:</p>
-          <p className=" capitalize text-purple-400">{image.transformationType}</p>
+          <p className="capitalize text-purple-400">{image.transformationType}</p>
         </div>
 
         {image.prompt && (
@@ -36,7 +34,7 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
             <p className="hidden text-dark-400/50 md:block">&#x25CF;</p>
             <div className="p-14-medium md:p-16-medium flex gap-2 ">
               <p className="text-dark-600">Prompt:</p>
-              <p className=" capitalize text-purple-400">{image.prompt}</p>
+              <p className="capitalize text-purple-400">{image.prompt}</p>
             </div>
           </>
         )}
@@ -46,7 +44,7 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
             <p className="hidden text-dark-400/50 md:block">&#x25CF;</p>
             <div className="p-14-medium md:p-16-medium flex gap-2">
               <p className="text-dark-600">Color:</p>
-              <p className=" capitalize text-purple-400">{image.color}</p>
+              <p className="capitalize text-purple-400">{image.color}</p>
             </div>
           </>
         )}
@@ -56,7 +54,7 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
             <p className="hidden text-dark-400/50 md:block">&#x25CF;</p>
             <div className="p-14-medium md:p-16-medium flex gap-2">
               <p className="text-dark-600">Aspect Ratio:</p>
-              <p className=" capitalize text-purple-400">{image.aspectRatio}</p>
+              <p className="capitalize text-purple-400">{image.aspectRatio}</p>
             </div>
           </>
         )}
