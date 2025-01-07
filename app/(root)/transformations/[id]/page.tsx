@@ -9,9 +9,15 @@ import { getImageById } from "@/lib/actions/image.actions";
 import { getImageSize } from "@/lib/utils";
 import { DeleteConfirmation } from "@/components/shared/DeleteConfirmation";
 
+// Define the SearchParamProps type to expect an object with `id` and `type`
+type SearchParamProps = {
+  params: { id: string; type: string };  // Update this to expect an object with `id` and `type`
+};
+
 const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
   const { userId } = await auth();
 
+  // Fetch the image based on the provided id
   const image = await getImageById(id);
 
   return (
