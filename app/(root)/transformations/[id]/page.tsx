@@ -1,24 +1,25 @@
-import { auth } from '@clerk/nextjs/server'
-import Image from "next/image";
-import Link from "next/link";
+import { auth } from '@clerk/nextjs/server';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import Header from "@/components/shared/Header";
-import TransformedImage from "@/components/shared/TransformedImage";
-import { Button } from "@/components/ui/button";
-import { getImageById } from "@/lib/actions/image.actions";
-import { getImageSize } from "@/lib/utils";
-import { DeleteConfirmation } from "@/components/shared/DeleteConfirmation";
+import Header from '@/components/shared/Header';
+import TransformedImage from '@/components/shared/TransformedImage';
+import { Button } from '@/components/ui/button';
+import { getImageById } from '@/lib/actions/image.actions';
+import { getImageSize } from '@/lib/utils';
+import { DeleteConfirmation } from '@/components/shared/DeleteConfirmation';
 
-// Define the SearchParamProps type to expect an object with `id` and `type`
+// Define the props to ensure type compatibility with PageProps
 type SearchParamProps = {
-  params: { id: string; type: string };  // Update this to expect an object with `id` and `type`
+  params: { id: string; type: string };
 };
 
-const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
+// Add asynchronous page loading
+const ImageDetails = async ({ params }: SearchParamProps) => {
   const { userId } = await auth();
 
-  // Fetch the image based on the provided id
-  const image = await getImageById(id);
+  // Fetch image data by ID
+  const image = await getImageById(params.id);
 
   return (
     <>
@@ -27,9 +28,7 @@ const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
       <section className="mt-5 flex flex-wrap gap-4">
         <div className="p-14-medium md:p-16-medium flex gap-2">
           <p className="text-dark-600">Transformation:</p>
-          <p className=" capitalize text-purple-400">
-            {image.transformationType}
-          </p>
+          <p className=" capitalize text-purple-400">{image.transformationType}</p>
         </div>
 
         {image.prompt && (
@@ -70,8 +69,8 @@ const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
             <h3 className="h3-bold text-dark-600">Original</h3>
 
             <Image
-              width={getImageSize(image.transformationType, image, "width")}
-              height={getImageSize(image.transformationType, image, "height")}
+              width={getImageSize(image.transformationType, image, 'width')}
+              height={getImageSize(image.transformationType, image, 'height')}
               src={image.secureURL}
               alt="image"
               className="transformation-original_image"
@@ -92,9 +91,7 @@ const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
         {userId === image.author.clerkId && (
           <div className="mt-4 space-y-4">
             <Button asChild type="button" className="submit-button capitalize">
-              <Link href={`/transformations/${image._id}/update`}>
-                Update Image
-              </Link>
+              <Link href={`/transformations/${image._id}/update`}>Update Image</Link>
             </Button>
 
             <DeleteConfirmation imageId={image._id} />
