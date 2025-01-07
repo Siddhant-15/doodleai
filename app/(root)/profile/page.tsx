@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server'
+import { auth } from '@clerk/nextjs/server';
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -7,7 +7,7 @@ import Header from "@/components/shared/Header";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
-const Profile = async ({ searchParams }: { searchParams: { page: string | undefined } }) => {
+const Profile = async ({ searchParams }: { searchParams: Record<string, string | undefined> }) => {
   const page = Number(searchParams?.page) || 1;
   const { userId } = await auth();
 
